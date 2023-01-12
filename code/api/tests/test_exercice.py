@@ -1,0 +1,56 @@
+from django.test import TestCase
+from rest_framework import status
+from rest_framework.test import APIClient
+from django.contrib.auth.models import User
+
+
+#   python manage.py test api/tests --verbosity=2
+
+class ApiTestCase(TestCase):
+    fixtures = ['enseignants', 'users', 'ues', "regles", "exercices"]
+
+    exercice_url = 'http://localhost:8002/api/exercices/'
+    exercice_new = {"id": 3, "nom": "exercice3", "ue": 1, "regles": [1]}
+    exercice_edited = exercice_new.copy()
+    exercice_edited['nom'] += "edited"
+        
+    def setUp(self):
+        self.anonymous = APIClient()
+        self.connected = APIClient()
+        root = User.objects.get(username='root')
+        connected = APIClient()
+        connected.force_authenticate(user=root) 
+
+
+    def test_connected_can_get_all_exercice(self):
+        response = self.connected.get(self.exercice_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()[0]['id'], 1)
+        self.assertEqual(response.json()[0]['nom'], "exercice1")
+        self.assertEqual(response.json()[1]['id'], 2)
+        self.assertEqual(response.json()[1]['nom'], "exercice2")
+
+    def test_connected_can_get_one_exercice(self):
+        
+        response = self.connected.get(self.exercice_url + '1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+    def test_connected_can_add_exercice(self):
+        response = self.connected.post(self.exercice_url, self.exercice_new)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = self.connected.get(self.exercice_url + str(response.json()['id']) + '/')
+        self.assertEqual(response.json()['id'], self.exercice_new['id'])        
+
+    def test_connected_can_update_exercice(self):
+        response = self.connected.put(self.exercice_url + '1/', self.exercice_edited)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.connected.get(self.exercice_url + '1/')
+        self.assertEqual(response.json()['nom'], self.exercice_edited['nom'])
+        
+    
+    def test_connected_can_delete_exercice(self):
+        response = self.connected.delete(self.exercice_url + '1/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = self.connected.get(self.exercice_url + '1/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
