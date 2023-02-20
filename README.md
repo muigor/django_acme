@@ -1,4 +1,4 @@
-# ACME_BlancoWeb_2022
+# ACME
 
 
 
@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.com/elouannanenada/acme_blancoweb_2022.git
+git remote add origin https://mi-git.univ-tlse2.fr/Chunyu.REN/acme.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.com/elouannanenada/acme_blancoweb_2022/-/settings/integrations)
+- [ ] [Set up project integrations](https://mi-git.univ-tlse2.fr/Chunyu.REN/acme/-/settings/integrations)
 
 ## Collaborate with your team
 
