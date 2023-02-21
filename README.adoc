@@ -1,5 +1,0 @@
-- il faut ajouter les fixtures, et faire appels au fixtures dans la class ApiTestCase dans les tests
-- pour récupérer les données en format json, il faut créer un nouveau path django vers les entités(models) et non pas utiliser le lien vers la version avancée générer automatiquement par django parceq'elle renvoie du html.
-- pour tester les connected il faut forcer l'authentification sinon il va les considérer comme annonymes.
-- afin d'éviter le problème de "bad request" il faut essayer de rajouter un individu d'une entité manuellement en utilisant le format json sur l'api afin de voir la forme correcte de l'ajout.
-ça aide aussi pour traçer la source de l'erreur et essayer de la corriger

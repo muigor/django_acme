@@ -1,8 +1,0 @@
-Django==3.0
-djangorestframework==3.11
-djangorestframework-simplejwt
-psycopg2
-pyYAML
-markdown
-django-filter
-drf_yasg
