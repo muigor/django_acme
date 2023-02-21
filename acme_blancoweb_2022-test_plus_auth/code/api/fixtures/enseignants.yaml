@@ -1,0 +1,22 @@
+- model: api.enseignant
+  pk: 1
+  fields:
+    id: 1
+    username: "El"
+    email: 'nada@test.com'
+    password: 'mdp'
+    created_at: '2013-03-16T17:41:28+00:00'
+    updated_at : '2013-03-16T17:41:28+00:00'
+    first_name : 'nada'
+    last_name : 'el'
+- model: api.enseignant
+  pk: 2
+  fields:
+    id: 2
+    username: "lola"
+    email: 'lola@test.com'
+    password: 'mdp'
+    created_at: '2013-03-16T17:41:28+00:00'
+    updated_at : '2013-03-16T17:41:28+00:00'
+    first_name : 'lola'
+    last_name : 'lo'

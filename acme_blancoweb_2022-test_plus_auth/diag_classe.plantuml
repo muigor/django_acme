@@ -1,0 +1,31 @@
+@startuml
+
+class ue {
+    - id : String 
+    - nom : String 
+}
+
+class enseignant {
+    - id : String
+    - nom : String
+    - prenom : String
+    - adresse_mail : String
+    - mot_de_passe : String
+}
+
+class excercice {
+    - id : String
+    - nom : String 
+}
+
+class regle {
+    - id : String
+    - nom : String
+    - description : Text
+}
+
+ue "0..*" -- "1..*" enseignant
+ue "1..1" -- "0..*" excercice
+excercice "0..*" -- "0..*" regle
+
+@enduml

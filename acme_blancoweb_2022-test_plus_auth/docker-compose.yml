@@ -1,0 +1,36 @@
+
+version: '3.9'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    container_name: db_
+    environment: 
+      POSTGRES_PASSWORD: '1234'
+    volumes:
+      - rule_volume:/var/lib/postgresql/data
+    
+  adminer:
+    image: adminer:latest
+    container_name: adminer_rule
+    restart: always
+    ports: 
+      - 8080:8080
+    depends_on:
+      - db
+  web: 
+    container_name: web_rule
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes: 
+      - ./code:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+
+
+volumes:
+  rule_volume:
