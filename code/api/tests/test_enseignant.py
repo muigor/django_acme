@@ -82,9 +82,5 @@ class ApiTestCase(TestCase):
         response = self.connected.delete(self.enseignant_url + '1/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         response = self.connected.get(self.enseignant_url + '1/')
-<<<<<<< HEAD
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)'''
-=======
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         
->>>>>>> caf3409c5ddb4b33f98f7d7ee14e9884f3e7c102
