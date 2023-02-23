@@ -35,16 +35,16 @@ class ApiTestCase(TestCase):
 
     def test_anonymous_can_not_add_exercice(self):
         response = self.anonymous.post(self.exercice_url, self.exercice_new)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         
 
     def test_anonymous_can_not_update_exercice(self):
         response = self.anonymous.put(self.exercice_url + '1/', self.exercice_edited)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code,  status.HTTP_401_UNAUTHORIZED)
         
     def test_anonymous_can_not_delete_exercice(self):
         response = self.anonymous.delete(self.exercice_url + '1/')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code,  status.HTTP_401_UNAUTHORIZED)
 
 
     def test_connected_can_get_all_exercice(self):

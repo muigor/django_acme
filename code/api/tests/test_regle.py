@@ -1,4 +1,4 @@
-'''from django.test import TestCase
+from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 from api.models import Enseignant
@@ -39,16 +39,16 @@ class ApiTestCase(TestCase):
 
     def test_anonymous_can_not_add_regle(self):
         response = self.anonymous.post(self.regle_url, self.regle_new)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         
 
     def test_anonymous_can_not_update_regle(self):
         response = self.anonymous.put(self.regle_url + '1/', self.regle_edited)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         
     def test_anonymous_can_not_delete_regle(self):
         response = self.anonymous.delete(self.regle_url + '1/')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
     def test_connected_can_get_all_regle(self):
@@ -82,4 +82,4 @@ class ApiTestCase(TestCase):
         response = self.connected.delete(self.regle_url + '1/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         response = self.connected.get(self.regle_url + '1/')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)'''
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
