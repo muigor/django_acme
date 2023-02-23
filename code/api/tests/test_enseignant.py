@@ -9,16 +9,17 @@ class ApiTestCase(TestCase):
     fixtures = ['enseignants', 'ues']
 
     enseignant_url = 'http://localhost:8000/api/enseignants/'
-    enseignant_new = {"username": "Isnard", "prenom": "Stéphane", "email": "test@test.com", "password": "mdp","ues": [1]}
+    enseignant_new = {"username": "Isnard", "email": "test@test.com", "password": "mdp","ues": [1], "first_name":"Isnard","last_name": "Stéphane"}
     enseignant_edited = enseignant_new.copy()
     enseignant_edited['username'] += "edited"
 
-    
+    # python manage.py test api/tests --verbosity=2
     
     def setUp(self):
         self.anonymous = APIClient()
         self.connected = APIClient()
-        self.connected.force_login(Enseignant.objects.get_or_create(username='testuser')[0]) 
+        #self.connected.force_login(Enseignant.objects.get_or_create(username='testuser')[0]) 
+        self.connected.force_authenticate(Enseignant.objects.get_or_create(username='testuser')[0])
         
         
 
@@ -82,3 +83,4 @@ class ApiTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         response = self.connected.get(self.enseignant_url + '1/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        

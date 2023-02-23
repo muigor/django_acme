@@ -11,14 +11,15 @@ class ApiTestCase(TestCase):
     fixtures = ['enseignants', 'ues']
 
     ue_url = 'http://localhost:8002/api/ues/'
-    ue_new = {"id": 3, "nom": "math","enseignants": [1]}
+    ue_new = {"id": 3, "codeUE" :'MIC001', "nom": "math","enseignants": [1]}
     ue_edited = ue_new.copy()
     ue_edited['nom'] += "edited"
         
     def setUp(self):
         self.anonymous = APIClient()
         self.connected = APIClient()
-        self.connected.force_login(Enseignant.objects.get_or_create(username='testuser')[0])
+        #self.connected.force_login(Enseignant.objects.get_or_create(username='testuser')[0])
+        self.connected.force_authenticate(Enseignant.objects.get_or_create(username='testuser')[0])
 
     def test_anonymous_can_get_all_ue(self):
         response = self.anonymous.get(self.ue_url)
