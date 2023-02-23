@@ -8,8 +8,8 @@ from api.models import Enseignant
 class ApiTestCase(TestCase):
     fixtures = ['enseignants', 'ues', "regles", "exercices"]
 
-    exercice_url = 'http://localhost:8002/api/exercices/'
-    exercice_new = {"id": 3, "nom": "exercice3", "ue": 1, "regles": [1]}
+    exercice_url = 'http://localhost:8000/api/exercices/'
+    exercice_new = {"id" :3,"nom": "exercice3", "ue": 1, "regles": [1]}
     exercice_edited = exercice_new.copy()
     exercice_edited['nom'] += "edited"
 

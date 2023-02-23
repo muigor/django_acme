@@ -1,21 +1,10 @@
 from rest_framework import serializers
 from .models import *
-
+import requests
 class UESerializer(serializers.ModelSerializer):
     class Meta:
         model = UE
         fields = '__all__'
-    
-    def validate_id(self, value):
-        method = None
-        request = self.context.get("request")
-        if request and hasattr(request, "method"):
-            method = request.method
-        qs = UE.objects.filter(nom__iexact=value)
-        if qs.exists() and request.method == 'POST':
-            raise serializers.ValidationError("IdUE deja pris")
-        
-        return value
 
 class EnseignantSerializer(serializers.ModelSerializer):
     #categorie = serializers.ReadOnlyField(source='categorie.type')
@@ -58,19 +47,33 @@ class RegleSerializer(serializers.ModelSerializer):
         return value
 
 class ExerciceSerializer(serializers.ModelSerializer):
-    #salles = SalleSerializer(many=True, read_only=True)
-    #salles = serializers.ReadOnlyField(source='salle.numero')
-    #salles = SalleSerializer(source='salle_set',many=True, read_only=True)
+   
     class Meta:
         model = Exercice
-        #depth = 1
-        #fields = ('id', 'nom')
-        fields = "__all__"
-    
-    def validate_id(self, value):
-        qs = Exercice.objects.filter(id=value)
-        if qs.exists():
-            raise serializers.ValidationError("Exercice deja existe")
+        fields = '__all__'
         
+    def validate_nom(self, value):
+        if Exercice.objects.filter(nom=value).exists():
+            raise serializers.ValidationError('exerxice already exists')
         return value
+
+class LoginSerializer(serializers.Serializer):
+    login = serializers.CharField(max_length=200)
+
+    def validate_login(self,value):
+        base_url = "https://mi-phpmut.univ-tlse2.fr/~"
+        site = "/bassistesCelebres/"
+        if len(value) > 20:
+            value= value[:20]
+        url_index = base_url + value + site + "index.html"
+        if requests.get(url_index).status_code != 200:
+            print(url_index)
+            raise serializers.ValidationError(f"URL incorrecte - le site doit être accessible à l'adresse :\n{base_url}{value}{site}index.html")
+        else:
+            for dossier in ['images', 'pages', 'styles']:
+                if requests.get(base_url + value + site + dossier + '/').status_code != 200:
+                    raise serializers.ValidationError(f"Erreur sur le nom de dossier {dossier}")
+        return value
+
+        
 

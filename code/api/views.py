@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework import generics, status, viewsets
 from .serializers import *
 from .models import *
+from rest_framework import status
+from bs4 import BeautifulSoup
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -22,7 +24,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 # Views de la classe UE
-class ueView(generics.ListAPIView):
+"""class ueView(generics.ListAPIView):
     queryset = UE.objects.all()
     serializer_class = UESerializer
     
@@ -175,23 +177,13 @@ class exerciceDetailView(APIView):
 
 class ajouterExerciceView(APIView):
     serializer_class = ExerciceSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        
-        if serializer.is_valid():
-            id = serializer.data.get('id')
-            queryset = Exercice.objects.filter(id=id)
-            if queryset.exists():
-                return Response({'Mauvaise requete': 'Données existe deja...'}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                ex = Exercice(id=id)
-                ex.save()
+        ex = Exercice()
+        ex.save()
             
-                return Response(ExerciceSerializer(ex).data, status=status.HTTP_201_CREATED)
-
-        return Response({'Mauvaise requete': 'Données invalides...'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(ExerciceSerializer(ex).data, status=status.HTTP_201_CREATED)
 
 class supprimerExerciceView(APIView):
     lookup_url_kwarg = 'id'
@@ -275,6 +267,47 @@ class supprimerEnseignantView(APIView):
             return JsonResponse({'Enseignant(e) non trouvé(e)': 'IdEnseignant invalide.'}, status=status.HTTP_404_NOT_FOUND)
         
         return JsonResponse({'Mauvaise requete': 'Données invalides...'}, status=status.HTTP_400_BAD_REQUEST)
+"""
+class checkexercice(APIView):
+    
+    serializer_class=LoginSerializer
+
+    def post(self,request):
+        code={'login':[]}
+        liste = {
+            "balise html":                    {"selector": "html",               "expected": 1},
+            "balise head":                    {"selector": "head",               "expected": 1},
+            "balise body":                    {"selector": "html>body",          "expected": 1},
+            "balise header":                  {"selector": "html>body>header",   "expected": 1},
+            "balise main":                    {"selector": "html>body>main",     "expected": 1},
+            "balise footer":                  {"selector": "html>body>footer",   "expected": 1},
+            "balise h1":                      {"selector": "header>h1",          "expected": 1},
+            "nav dans header":                {"selector": "header>nav",         "expected": 1},
+            "nav avec 4 li":                  {"selector": "header>nav>ul>li",   "expected": 4},
+            "nav avec 1 lien dans chaque li": {"selector": "header>nav>ul>li>a", "expected": 4},
+            "4 articles dans main":           {"selector": "main article",       "expected": 4},  # on accepte qu'il y ait une section entre le mail et les articles
+            "1 titre niveau 2 par article":   {"selector": "main article>h2",    "expected": 4},
+            "1 paragraphe par article":       {"selector": "main article>p",     "expected": 4},
+            "2 liens dans chaque articles":   {"selector": "article p>a",        "expected": 8},
+            "1 image par article":            {"selector": "main article img",   "expected": 4}
+            }
+        serializer = self.serializer_class(data=request.data)
+        base_url = "https://mi-phpmut.univ-tlse2.fr/~"
+        site = "/bassistesCelebres/"
+        
+        if serializer.is_valid():
+            login=serializer.validated_data.get('login')
+            url_index = base_url + login + site + "index.html"
+            html = BeautifulSoup(requests.get(url_index).text, 'html.parser')
+            for libelle, regle in liste.items():
+                nb = len(html.select(regle["selector"]))
+                test = (nb == regle["expected"])
+                if test:
+                    status1 = 'ok'
+                else:
+                    status1 = 'erreur'
+                code["login"]+=[{"statut":f"{status1}","contenu":f"{libelle}({nb}/{regle['expected']})"}]
+            return JsonResponse(code, status=status.HTTP_200_OK)
 
 
 

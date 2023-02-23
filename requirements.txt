@@ -1,6 +1,10 @@
 Django==3.0
 djangorestframework==3.11
 djangorestframework-simplejwt
+BeautifulSoup4
+django-cors-headers
+status
+datetime
 psycopg2
 pyYAML
 markdown
