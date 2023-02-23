@@ -16,8 +16,8 @@ class ApiTestCase(TestCase):
     def setUp(self):
         self.anonymous = APIClient()
         self.connected = APIClient()
-        self.connected.force_login(Enseignant.objects.get_or_create(username='testuser')[0])
-
+        #self.connected.force_login(Enseignant.objects.get_or_create(username='testuser')[0])
+        self.connected.force_authenticate(Enseignant.objects.get_or_create(username='testuser')[0])
     
 
     def test_anonymous_can_get_all_exercice(self):
@@ -79,3 +79,4 @@ class ApiTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         response = self.connected.get(self.exercice_url + '1/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        

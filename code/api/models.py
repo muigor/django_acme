@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 class UE(models.Model):
     
     id              = models.AutoField(primary_key=True)
+    codeUE          = models.CharField(max_length=10, blank=False)
     nom             = models.CharField(max_length=50)
     enseignants     = models.ManyToManyField("Enseignant")
     created_at      = models.DateTimeField(auto_now_add=True)

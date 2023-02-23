@@ -18,7 +18,9 @@ class ApiTestCase(TestCase):
     def setUp(self):
         self.anonymous = APIClient()
         self.connected = APIClient()
-        self.connected.force_login(Enseignant.objects.get_or_create(username='testuser')[0])
+        #self.connected.force_login(Enseignant.objects.get_or_create(username='testuser')[0])
+        self.connected.force_authenticate(Enseignant.objects.get_or_create(username='testuser')[0])
+
 
 
 
