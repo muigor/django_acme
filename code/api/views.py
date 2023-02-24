@@ -269,28 +269,10 @@ class supprimerEnseignantView(APIView):
         return JsonResponse({'Mauvaise requete': 'Données invalides...'}, status=status.HTTP_400_BAD_REQUEST)
 """
 class checkexercice(APIView):
-    
     serializer_class=LoginSerializer
-
     def post(self,request):
         code={'login':[]}
-        liste = {
-            "balise html":                    {"selector": "html",               "expected": 1},
-            "balise head":                    {"selector": "head",               "expected": 1},
-            "balise body":                    {"selector": "html>body",          "expected": 1},
-            "balise header":                  {"selector": "html>body>header",   "expected": 1},
-            "balise main":                    {"selector": "html>body>main",     "expected": 1},
-            "balise footer":                  {"selector": "html>body>footer",   "expected": 1},
-            "balise h1":                      {"selector": "header>h1",          "expected": 1},
-            "nav dans header":                {"selector": "header>nav",         "expected": 1},
-            "nav avec 4 li":                  {"selector": "header>nav>ul>li",   "expected": 4},
-            "nav avec 1 lien dans chaque li": {"selector": "header>nav>ul>li>a", "expected": 4},
-            "4 articles dans main":           {"selector": "main article",       "expected": 4},  # on accepte qu'il y ait une section entre le mail et les articles
-            "1 titre niveau 2 par article":   {"selector": "main article>h2",    "expected": 4},
-            "1 paragraphe par article":       {"selector": "main article>p",     "expected": 4},
-            "2 liens dans chaque articles":   {"selector": "article p>a",        "expected": 8},
-            "1 image par article":            {"selector": "main article img",   "expected": 4}
-            }
+        liste1=Regle.objects.all().values()
         serializer = self.serializer_class(data=request.data)
         base_url = "https://mi-phpmut.univ-tlse2.fr/~"
         site = "/bassistesCelebres/"
@@ -299,14 +281,14 @@ class checkexercice(APIView):
             login=serializer.validated_data.get('login')
             url_index = base_url + login + site + "index.html"
             html = BeautifulSoup(requests.get(url_index).text, 'html.parser')
-            for libelle, regle in liste.items():
+            for regle in liste1:
                 nb = len(html.select(regle["selector"]))
                 test = (nb == regle["expected"])
                 if test:
                     status1 = 'ok'
                 else:
                     status1 = 'erreur'
-                code["login"]+=[{"statut":f"{status1}","contenu":f"{libelle}({nb}/{regle['expected']})"}]
+                code["login"]+=[{"statut":f"{status1}","contenu":f"{regle['nom']} ({nb}/{regle['expected']})"}]
             return JsonResponse(code, status=status.HTTP_200_OK)
 
 

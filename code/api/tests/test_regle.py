@@ -11,7 +11,7 @@ class ApiTestCase(TestCase):
     fixtures = ['enseignants', 'ues', "regles", "exercices"]
 
     regle_url = 'http://localhost:8002/api/regles/'
-    regle_new = {"id": 3, "nom": "regle3","description": "balise test", "exercices": [1]}
+    regle_new = {"id": 3, "nom": "balise test","selector": "test","expected":4, "exercices": [1]}
     regle_edited = regle_new.copy()
     regle_edited['nom'] += "edited"
         

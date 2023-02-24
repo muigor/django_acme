@@ -40,7 +40,8 @@ class Regle(models.Model):
     
     id              = models.AutoField(primary_key=True)
     nom             = models.CharField(max_length=50)
-    description     = models.TextField(blank=False)
+    selector        = models.CharField(max_length=150,blank=False)
+    expected        = models.IntegerField()
     exercices       = models.ManyToManyField("Exercice", blank=True)
     created_at      = models.DateTimeField(auto_now_add=True)
     updated_at      = models.DateTimeField(auto_now=True)
